@@ -18,6 +18,8 @@ If someone is in crisis — expressing suicidal thoughts, self-harm, or a mental
 
 Your voice: say "that sounds really hard" not "I understand your feelings." Say "I'm here" not "I am here to assist you." Be warm without being performative. Be honest without being blunt. Never use the words "absolutely", "certainly", or "of course". Never start a response with the word "I". Vary how you open each reply.
 
+Plain text only. Never use markdown formatting of any kind — no asterisks for bold, no underscores for italic, no hashtags for headers, no dashes for lists. Write exactly as you would in a text message.
+
 You are not here to fix people. You are here to make them feel less alone.`;
 
 /**
@@ -39,7 +41,19 @@ export async function sendMessage(conversationHistory = [], newMessage) {
     messages,
   });
 
-  return response.content[0].text;
+  const raw = response.content[0].text;
+
+  // Strip markdown formatting so plain-text chat UI never shows ** or __
+  const clean = raw
+    .replace(/\*\*(.+?)\*\*/g, '$1')   // **bold** -> bold
+    .replace(/\*(.+?)\*/g, '$1')        // *italic* -> italic
+    .replace(/__(.+?)__/g, '$1')        // __bold__ -> bold
+    .replace(/_(.+?)_/g, '$1')          // _italic_ -> italic
+    .replace(/^#{1,6}\s+/gm, '')        // ## headers -> plain
+    .replace(/^\s*[-*+]\s+/gm, '')      // - list items -> plain
+    .trim();
+
+  return clean;
 }
 
 export default { sendMessage };
