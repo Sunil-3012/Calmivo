@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Calmivo — UI Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0F0B1A;
+  --bg2:#14102A;
+  --card:rgba(28,21,48,0.7);
+  --card-solid:#1C1530;
+  --pink:#FF47C4;
+  --magenta:#C026D3;
+  --light-purple:#E040FB;
+  --text:#F0EEFF;
+  --muted:#9B8EC4;
+  --border:rgba(45,37,80,0.6);
+  --glow-pink:0 0 40px rgba(255,71,196,0.3);
+  --glow-mag:0 0 40px rgba(192,38,211,0.25);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* Canvas */
+#cosmos{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* All content above canvas */
+.layer{position:relative;z-index:1}
+
+/* Navbar */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(15,11,26,0.75);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:1100px;margin:0 auto;padding:0 28px;
+  height:68px;display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;
+  text-decoration:none;color:var(--text);
+}
+.logo svg{width:36px;height:36px;filter:drop-shadow(0 0 10px rgba(255,71,196,0.7))}
+.logo-text{
+  background:linear-gradient(135deg,#FF47C4,#E040FB);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.nav-links{display:flex;gap:32px;list-style:none;align-items:center}
+.nav-links a{font-size:.9rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--pink)}
+.nav-cta{
+  background:linear-gradient(135deg,var(--pink),var(--magenta));
+  color:#fff!important;padding:9px 22px;border-radius:999px;
+  font-weight:600!important;box-shadow:0 0 16px rgba(255,71,196,0.35);
+  transition:box-shadow .2s!important;
+}
+.nav-cta:hover{box-shadow:0 0 28px rgba(255,71,196,0.6)!important}
+
+/* Sections */
+section{padding:100px 0}
+.container{max-width:1100px;margin:0 auto;padding:0 28px}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding-top:120px;text-align:center;
+}
+.hero-inner{max-width:780px;margin:0 auto}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(192,38,211,0.12);color:var(--pink);
+  padding:6px 18px;border-radius:999px;font-size:.85rem;font-weight:600;
+  border:1px solid rgba(255,71,196,0.25);margin-bottom:28px;
+  backdrop-filter:blur(8px);
+}
+.hero h1{
+  font-family:'Fraunces',serif;
+  font-size:clamp(2.8rem,5.5vw,4.5rem);
+  font-weight:700;line-height:1.1;margin-bottom:24px;
+}
+.hero h1 .gradient-text{
+  background:linear-gradient(135deg,#FF47C4 0%,#E040FB 40%,#C026D3 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200%;animation:shimmer 4s linear infinite;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+.hero p{
+  font-size:1.15rem;color:var(--muted);max-width:540px;
+  margin:0 auto 40px;line-height:1.75;
+}
+.hero-btns{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:72px;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--pink),var(--magenta));
+  color:#fff;padding:15px 32px;border-radius:999px;
+  font-size:1rem;font-weight:600;border:none;cursor:pointer;
+  box-shadow:0 0 24px rgba(255,71,196,0.4);
+  transition:transform .15s,box-shadow .2s;
+  text-decoration:none;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(255,71,196,0.6)}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--pink);
+  padding:14px 32px;border-radius:999px;font-size:1rem;font-weight:600;
+  border:2px solid var(--pink);cursor:pointer;
+  transition:transform .15s,background .2s,box-shadow .2s;
+  text-decoration:none;
+}
+.btn-outline:hover{background:rgba(255,71,196,0.08);transform:translateY(-2px);box-shadow:0 0 20px rgba(255,71,196,0.2)}
+
+/* Chat Preview */
+.chat-preview{
+  max-width:600px;margin:0 auto;
+  background:rgba(28,21,48,0.65);
+  backdrop-filter:blur(24px);
+  border:1px solid rgba(255,71,196,0.2);
+  border-radius:20px;
+  box-shadow:0 0 60px rgba(192,38,211,0.15),0 20px 60px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+.chat-bar{
+  background:rgba(255,71,196,0.08);
+  padding:12px 20px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(255,71,196,0.15);
+}
+.dot{width:10px;height:10px;border-radius:50%}
+.chat-bar-title{
+  margin-left:8px;font-size:.85rem;font-weight:600;color:var(--pink);
+}
+.chat-body{padding:24px;display:flex;flex-direction:column;gap:14px}
+.bubble{
+  max-width:80%;padding:12px 16px;border-radius:14px;font-size:.9rem;line-height:1.55;
+}
+.bubble-user{
+  align-self:flex-end;
+  background:linear-gradient(135deg,var(--pink),var(--magenta));
+  color:#fff;border-bottom-right-radius:4px;
+}
+.bubble-sage{
+  align-self:flex-start;
+  background:rgba(45,37,80,0.8);
+  color:var(--text);
+  border:1px solid rgba(255,71,196,0.12);
+  border-bottom-left-radius:4px;
+}
+.bubble-name{font-size:.7rem;font-weight:700;color:var(--pink);margin-bottom:4px}
+
+/* ── SCROLL REVEAL ── */
+.reveal{
+  opacity:0;transform:translateY(32px);
+  transition:opacity .65s ease,transform .65s ease;
+}
+.reveal.show{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+/* Section labels */
+.label{
+  text-align:center;font-size:.75rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--pink);margin-bottom:12px;
+}
+.section-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(1.8rem,3vw,2.6rem);
+  font-weight:700;color:var(--text);text-align:center;
+  margin-bottom:16px;line-height:1.2;
+}
+.section-sub{
+  text-align:center;color:var(--muted);
+  font-size:1.05rem;max-width:500px;
+  margin:0 auto 56px;line-height:1.7;
+}
+
+/* ── FEATURES ── */
+.features-bg{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 50%,var(--bg) 100%)}
+.features-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;
+}
+.card{
+  background:var(--card);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:20px;padding:36px 32px;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  cursor:default;
+}
+.card:hover{
+  transform:translateY(-8px) perspective(800px) rotateX(2deg);
+  box-shadow:0 0 40px rgba(255,71,196,0.2),0 20px 40px rgba(0,0,0,0.4);
+  border-color:rgba(255,71,196,0.35);
+}
+.card-icon{
+  width:56px;height:56px;border-radius:14px;
+  background:rgba(192,38,211,0.15);
+  border:1px solid rgba(192,38,211,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;margin-bottom:20px;
+}
+.card h3{font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:10px}
+.card p{color:var(--muted);font-size:.95rem;line-height:1.65}
+
+/* ── WHY SECTION ── */
+.why-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;
+}
+.why-label{text-align:left}
+.why-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(1.8rem,3vw,2.6rem);
+  font-weight:700;color:var(--text);
+  margin:12px 0 24px;line-height:1.2;
+}
+.why-text{color:var(--muted);font-size:1rem;line-height:1.8;margin-bottom:16px}
+.why-stats{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.stat{
+  background:var(--card);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:18px;
+  padding:28px 20px;text-align:center;
+  transition:transform .2s,border-color .2s;
+}
+.stat:hover{transform:translateY(-4px);border-color:rgba(255,71,196,.3)}
+.stat-num{
+  font-family:'Fraunces',serif;font-size:2rem;font-weight:700;
+  background:linear-gradient(135deg,var(--pink),var(--light-purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:6px;
+}
+.stat-label{font-size:.85rem;color:var(--muted);font-weight:500}
+
+/* ── HOW IT WORKS ── */
+.steps{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  position:relative;
+}
+.steps::before{
+  content:'';position:absolute;
+  top:32px;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,71,196,0.3),transparent);
+}
+.step{text-align:center;padding:0 20px}
+.step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--magenta));
+  color:#fff;font-size:1.1rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  box-shadow:0 0 20px rgba(255,71,196,0.4);
+}
+.step h3{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.step p{font-size:.875rem;color:var(--muted);line-height:1.6}
+
+/* ── TESTIMONIALS ── */
+.test-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;
+}
+.test-card{
+  background:var(--card);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:20px;
+  padding:28px;
+  transition:transform .2s,border-color .2s;
+}
+.test-card:hover{transform:translateY(-4px);border-color:rgba(192,38,211,.3)}
+.stars{color:#F59E0B;font-size:1rem;letter-spacing:2px;margin-bottom:14px}
+.test-text{
+  font-size:.95rem;color:var(--muted);
+  line-height:1.65;margin-bottom:20px;font-style:italic;
+}
+.test-author{display:flex;align-items:center;gap:12px}
+.test-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(192,38,211,0.15);
+  border:1px solid rgba(192,38,211,0.25);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.test-name{font-weight:600;font-size:.9rem;color:var(--text)}
+.test-role{font-size:.8rem;color:var(--muted)}
+
+/* ── CTA ── */
+.cta-box{
+  background:linear-gradient(135deg,rgba(192,38,211,.2),rgba(255,71,196,.1));
+  border:1px solid rgba(192,38,211,.3);
+  border-radius:24px;padding:72px 48px;text-align:center;
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 60px rgba(192,38,211,.1);
+  position:relative;overflow:hidden;
+}
+.cta-box::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(255,71,196,.08),transparent 60%);
+  pointer-events:none;
+}
+.cta-box h2{
+  font-family:'Fraunces',serif;
+  font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;margin-bottom:14px;
+}
+.cta-box p{font-size:1.05rem;color:var(--muted);margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto}
+
+/* ── FOOTER ── */
+footer{
+  background:#08060F;border-top:1px solid rgba(45,37,80,.5);
+  padding:48px 0 32px;
+}
+.footer-inner{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:32px;flex-wrap:wrap;margin-bottom:40px;
+}
+.footer-logo{
+  font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;
+  background:linear-gradient(135deg,var(--pink),var(--light-purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:8px;
+}
+.footer-tagline{font-size:.875rem;color:rgba(240,238,255,.45);max-width:200px;line-height:1.6}
+.footer-links h4{
+  color:var(--text);font-size:.8rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;
+}
+.footer-links ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{
+  font-size:.875rem;color:rgba(240,238,255,.45);
+  text-decoration:none;transition:color .2s;
+}
+.footer-links a:hover{color:var(--pink)}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.07);
+  padding-top:24px;text-align:center;
+  font-size:.8rem;color:rgba(240,238,255,.35);
+}
+.footer-disclaimer{font-size:.75rem;margin-top:6px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+/* Scroll progress bar */
+#progress{
+  position:fixed;top:0;left:0;z-index:200;
+  height:2px;width:0%;
+  background:linear-gradient(90deg,var(--pink),var(--light-purple),var(--magenta));
+  transition:width .1s;
+  box-shadow:0 0 8px rgba(255,71,196,0.6);
+}
+
+/* Cursor glow */
+#cursor-glow{
+  position:fixed;
+  width:400px;height:400px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:2;
+  background:radial-gradient(circle, rgba(192,38,211,0.1) 0%, rgba(255,71,196,0.04) 40%, transparent 70%);
+  transform:translate(-50%,-50%);
+  transition:transform 0.12s ease-out, opacity 0.3s;
+  opacity:0;
+}
+
+/* 3D card tilt */
+.card{transform-style:preserve-3d;transition:transform .2s,box-shadow .2s,border-color .2s}
+.card-shine{
+  position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12) 0%, transparent 60%);
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.card:hover .card-shine{opacity:1}
+
+/* Gradient blob orbs */
+.blob{
+  position:fixed;border-radius:50%;
+  pointer-events:none;z-index:0;
+  filter:blur(80px);
+  animation:blobFloat linear infinite;
+}
+@keyframes blobFloat{
+  0%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(60px,-40px) scale(1.08)}
+  50%{transform:translate(-30px,60px) scale(0.95)}
+  75%{transform:translate(40px,30px) scale(1.05)}
+  100%{transform:translate(0,0) scale(1)}
+}
+
+@media(max-width:768px){
+  .why-grid,.steps{grid-template-columns:1fr}
+  .steps::before{display:none}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div id="progress"></div>
+
+<!-- Cursor glow -->
+<div id="cursor-glow"></div>
+
+<!-- Background gradient blobs -->
+<div class="blob" style="width:600px;height:600px;top:5%;left:-10%;background:rgba(192,38,211,0.12);animation-duration:18s"></div>
+<div class="blob" style="width:500px;height:500px;top:40%;right:-8%;background:rgba(255,71,196,0.08);animation-duration:24s;animation-delay:-8s"></div>
+<div class="blob" style="width:700px;height:700px;top:70%;left:20%;background:rgba(100,50,200,0.1);animation-duration:20s;animation-delay:-14s"></div>
+
+<!-- Cosmos canvas -->
+<canvas id="cosmos"></canvas>
+
+<!-- Navbar -->
+<nav class="layer">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <svg viewBox="0 0 100 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ng" x1="5" y1="5" x2="95" y2="90" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FF47C4"/>
+            <stop offset="100%" stop-color="#C026D3"/>
+          </linearGradient>
+          <filter id="nglow" x="-25%" y="-25%" width="150%" height="150%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M15 6 Q5 6 5 16 L5 62 Q5 72 15 72 L20 72 L11 90 L36 72 L85 72 Q95 72 95 62 L95 16 Q95 6 85 6 Z"
+          stroke="url(#ng)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" filter="url(#nglow)"/>
+        <path d="M50 28 C46 19 20 20 20 38 C20 53 35 60 50 67"
+          stroke="url(#ng)" stroke-width="5" stroke-linecap="round" filter="url(#nglow)"/>
+        <path d="M50 28 C54 19 80 20 80 38 C80 53 65 60 50 67"
+          stroke="url(#ng)" stroke-width="5" stroke-linecap="round" filter="url(#nglow)"/>
+      </svg>
+      <span class="logo-text">Calmivo</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#why">Why Calmivo</a></li>
+      <li><a href="#stories">Stories</a></li>
+      <li><a href="#" class="nav-cta">Start Chatting</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero layer">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="badge reveal">✨ AI-Powered Mental Wellness</div>
+      <h1 class="reveal reveal-delay-1">
+        A calmer mind starts with<br>
+        <span class="gradient-text">one conversation</span>
+      </h1>
+      <p class="reveal reveal-delay-2">
+        Calmivo is your safe, judgment-free space to talk, reflect, and grow.
+        Powered by AI, guided by compassion. Available anytime you need it.
+      </p>
+      <div class="hero-btns reveal reveal-delay-3">
+        <a href="#" class="btn-primary">💬 Talk to Sage, it's free</a>
+        <a href="#" class="btn-outline">Explore Resources</a>
+      </div>
+
+      <!-- Chat preview -->
+      <div class="chat-preview reveal">
+        <div class="chat-bar">
+          <div class="dot" style="background:#FC5753"></div>
+          <div class="dot" style="background:#FDBC40"></div>
+          <div class="dot" style="background:#33C748"></div>
+          <span class="chat-bar-title">💜 Sage — Calmivo Companion</span>
+        </div>
+        <div class="chat-body">
+          <div class="bubble bubble-user">I've been feeling really anxious and overwhelmed lately...</div>
+          <div class="bubble bubble-sage">
+            <div class="bubble-name">Sage</div>
+            That sounds really hard, and I'm glad you reached out. What's been weighing on you most right now?
+          </div>
+          <div class="bubble bubble-user">It's mostly work stress and not sleeping well</div>
+          <div class="bubble bubble-sage">
+            <div class="bubble-name">Sage</div>
+            That combination is tough — poor sleep makes everything feel heavier. Want to try a quick breathing exercise together? It takes under 5 minutes.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-bg layer" id="features">
+  <div class="container">
+    <p class="label reveal">What Calmivo Offers</p>
+    <h2 class="section-title reveal">Everything you need to feel better</h2>
+    <p class="section-sub reveal">Three powerful tools designed to support your mental wellbeing, all in one place.</p>
+    <div class="features-grid">
+      <div class="card reveal reveal-delay-1" data-tilt>
+        <div class="card-shine"></div>
+        <div class="card-icon">💬</div>
+        <h3>AI Wellness Companion</h3>
+        <p>Chat with Sage, your compassionate AI companion trained in CBT techniques, grounding exercises, and empathetic listening. Available 24/7.</p>
+      </div>
+      <div class="card reveal reveal-delay-2" data-tilt>
+        <div class="card-shine"></div>
+        <div class="card-icon">📊</div>
+        <h3>Mood Tracker</h3>
+        <p>Log how you're feeling daily and watch your patterns emerge. Track your mood score, add notes, and discover your emotional trends over time.</p>
+      </div>
+      <div class="card reveal reveal-delay-3" data-tilt>
+        <div class="card-shine"></div>
+        <div class="card-icon">🌿</div>
+        <h3>Wellness Resources</h3>
+        <p>Access a curated library of evidence-based exercises: breathing techniques, grounding methods, sleep guides, and mindfulness practices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY I BUILT THIS -->
+<section class="layer" id="why" style="padding:100px 0">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <p class="label why-label reveal">The Story</p>
+        <h2 class="why-title reveal">Why I built Calmivo</h2>
+        <p class="why-text reveal">Late one night during my final year of college, I found myself spiraling with anxiety but too exhausted to call anyone. I just needed something to talk to. Something patient. Something that wouldn't judge me for feeling overwhelmed at 2am.</p>
+        <p class="why-text reveal">I'm Sunil, a software engineer who started building Calmivo not because I saw a market opportunity, but because I genuinely needed something like it. The companion I wish I'd had.</p>
+        <p class="why-text reveal">Calmivo isn't trying to replace therapy. It's the bridge between feeling overwhelmed and feeling ready to take the next step.</p>
+      </div>
+      <div class="why-stats reveal">
+        <div class="stat"><div class="stat-num" data-count-text="24/7">24/7</div><div class="stat-label">Always available</div></div>
+        <div class="stat"><div class="stat-num" data-count-text="Free">Free</div><div class="stat-label">No cost, ever</div></div>
+        <div class="stat"><div class="stat-num" data-count-text="Private">Private</div><div class="stat-label">No account needed</div></div>
+        <div class="stat"><div class="stat-num" data-count-text="Safe">Safe</div><div class="stat-label">Crisis support built in</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="layer" style="padding:100px 0;background:rgba(20,16,42,0.5)">
+  <div class="container">
+    <p class="label reveal">Simple by Design</p>
+    <h2 class="section-title reveal">How Calmivo works</h2>
+    <p class="section-sub reveal">No sign-up required. Just open, talk, and feel better.</p>
+    <div class="steps">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">1</div>
+        <h3>Open Calmivo</h3>
+        <p>No account needed. Your session is private and yours alone.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">2</div>
+        <h3>Talk to Sage</h3>
+        <p>Share what's on your mind. Sage listens with empathy and responds thoughtfully.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num">3</div>
+        <h3>Track your mood</h3>
+        <p>Log your feelings and discover your emotional patterns over time.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.4s">
+        <div class="step-num">4</div>
+        <h3>Practice and grow</h3>
+        <p>Use curated exercises to build healthy habits and emotional resilience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="layer" id="stories" style="padding:100px 0">
+  <div class="container">
+    <p class="label reveal">Real Stories</p>
+    <h2 class="section-title reveal">People who found their calm</h2>
+    <p class="section-sub reveal">Here's what people say about using Calmivo during difficult moments.</p>
+    <div class="test-grid">
+      <div class="test-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"I was having a panic attack at 2am with no one to call. Sage walked me through a breathing exercise and just listened. I felt genuinely better within 15 minutes."</p>
+        <div class="test-author">
+          <div class="test-avatar">🌸</div>
+          <div><div class="test-name">Anonymous</div><div class="test-role">Graduate Student</div></div>
+        </div>
+      </div>
+      <div class="test-card reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"The mood tracker helped me realize my anxiety spikes every Sunday evening. That awareness alone has been life-changing for how I plan my week."</p>
+        <div class="test-author">
+          <div class="test-avatar">🌊</div>
+          <div><div class="test-name">Anonymous</div><div class="test-role">Software Engineer</div></div>
+        </div>
+      </div>
+      <div class="test-card reveal reveal-delay-3">
+        <div class="stars">★★★★★</div>
+        <p class="test-text">"I use the resources section every night before bed. The progressive muscle relaxation exercise has genuinely transformed my sleep. Highly recommend."</p>
+        <div class="test-author">
+          <div class="test-avatar">🌿</div>
+          <div><div class="test-name">Anonymous</div><div class="test-role">Healthcare Worker</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="layer" style="padding:80px 0">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>Ready to find your calm?</h2>
+      <p>Start a conversation with Sage right now. No sign-up, no judgment, just support.</p>
+      <a href="#" class="btn-primary">💬 Start talking, it's free</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="layer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">Calmivo</div>
+        <p class="footer-tagline">Your AI mental wellness companion. Available anytime, completely private.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Chat with Sage</a></li>
+          <li><a href="#">Mood Tracker</a></li>
+          <li><a href="#">Resources</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Crisis Support</h4>
+        <ul>
+          <li><a href="tel:988">988 Lifeline: Call or Text 988</a></li>
+          <li><a href="#">Crisis Text Line: Text HOME to 741741</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Calmivo. Built with 💜 for everyone who needs a moment of calm.</p>
+      <p class="footer-disclaimer">Calmivo is an AI wellness tool and is not a substitute for professional mental health care. If you are in crisis, please call 988.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+//  BREATHING COSMOS — Canvas Particle System
+// ══════════════════════════════════════════════════════════════════════
+const canvas = document.getElementById('cosmos');
+const ctx = canvas.getContext('2d');
+let W, H, particles;
+const mouse = { x: -9999, y: -9999 };
+const COLORS = ['#FF47C4','#C026D3','#E040FB','#a78bfa','#c4b5fd','#ffffff'];
+const PARTICLE_COUNT = 180;
+const bursts = []; // click burst particles
+
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+function rand(a,b){ return Math.random()*(b-a)+a; }
+
+class Particle {
+  constructor(){ this.reset(true); }
+  reset(initial=false){
+    this.x = rand(0,W);
+    this.y = initial ? rand(0,H) : (Math.random()<.5 ? -10 : H+10);
+    this.size = rand(0.8,2.8); this.baseSize = this.size;
+    this.speedX = rand(-0.3,0.3); this.speedY = rand(-0.15,-0.05);
+    this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+    this.opacity = rand(0.2,0.9); this.baseOpacity = this.opacity;
+    this.breathPhase = rand(0,Math.PI*2); this.breathSpeed = rand(0.008,0.02);
+    this.wobble = rand(0,Math.PI*2); this.wobbleSpeed = rand(0.005,0.015);
+  }
+  update(){
+    this.breathPhase += this.breathSpeed;
+    const b = Math.sin(this.breathPhase);
+    this.opacity = this.baseOpacity + b*0.15;
+    this.size = this.baseSize + b*0.4;
+    this.wobble += this.wobbleSpeed;
+    this.x += this.speedX + Math.sin(this.wobble)*0.12;
+    this.y += this.speedY;
+    const dx=this.x-mouse.x, dy=this.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<130){ const f=(130-d)/130; this.x+=(dx/d)*f*0.9; this.y+=(dy/d)*f*0.9; }
+    if(this.y<-20||this.x<-20||this.x>W+20) this.reset();
+  }
+  draw(){
+    ctx.save(); ctx.globalAlpha=Math.max(0,Math.min(1,this.opacity));
+    ctx.beginPath(); ctx.arc(this.x,this.y,Math.max(0.1,this.size),0,Math.PI*2);
+    ctx.fillStyle=this.color; ctx.shadowBlur=this.size*4; ctx.shadowColor=this.color;
+    ctx.fill(); ctx.restore();
+  }
+}
+
+// Burst particle (from click)
+class BurstParticle {
+  constructor(x,y){
+    this.x=x; this.y=y;
+    const angle=Math.random()*Math.PI*2;
+    const speed=rand(2,8);
+    this.vx=Math.cos(angle)*speed; this.vy=Math.sin(angle)*speed;
+    this.life=1; this.decay=rand(0.02,0.05);
+    this.size=rand(1.5,4);
+    this.color=COLORS[Math.floor(Math.random()*COLORS.length)];
+  }
+  update(){ this.x+=this.vx; this.y+=this.vy; this.vx*=0.92; this.vy*=0.92; this.life-=this.decay; }
+  draw(){
+    if(this.life<=0) return;
+    ctx.save(); ctx.globalAlpha=this.life;
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fillStyle=this.color; ctx.shadowBlur=10; ctx.shadowColor=this.color;
+    ctx.fill(); ctx.restore();
+  }
+}
+
+function drawConnections(){
+  const MAX=90;
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<MAX){
+        ctx.save(); ctx.globalAlpha=(1-d/MAX)*0.12;
+        ctx.strokeStyle='#C026D3'; ctx.lineWidth=0.5;
+        ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y); ctx.stroke(); ctx.restore();
+      }
+    }
+  }
+}
+
+function init(){ resize(); particles=Array.from({length:PARTICLE_COUNT},()=>new Particle()); }
+
+function animate(){
+  ctx.clearRect(0,0,W,H);
+  drawConnections();
+  particles.forEach(p=>{p.update();p.draw();});
+  for(let i=bursts.length-1;i>=0;i--){
+    bursts[i].update(); bursts[i].draw();
+    if(bursts[i].life<=0) bursts.splice(i,1);
+  }
+  requestAnimationFrame(animate);
+}
+
+window.addEventListener('resize', resize);
+window.addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
+window.addEventListener('mouseleave',()=>{ mouse.x=-9999; mouse.y=-9999; });
+
+// Click burst
+window.addEventListener('click', e=>{
+  for(let i=0;i<28;i++) bursts.push(new BurstParticle(e.clientX,e.clientY));
+});
+
+init(); animate();
+
+// ══════════════════════════════════════════════════════════════════════
+//  CURSOR GLOW
+// ══════════════════════════════════════════════════════════════════════
+const glow = document.getElementById('cursor-glow');
+let glowX=window.innerWidth/2, glowY=window.innerHeight/2;
+let targetX=glowX, targetY=glowY;
+
+window.addEventListener('mousemove', e=>{ targetX=e.clientX; targetY=e.clientY; glow.style.opacity='1'; });
+window.addEventListener('mouseleave',()=>{ glow.style.opacity='0'; });
+
+function animateGlow(){
+  glowX += (targetX-glowX)*0.08;
+  glowY += (targetY-glowY)*0.08;
+  glow.style.left = glowX+'px';
+  glow.style.top  = glowY+'px';
+  requestAnimationFrame(animateGlow);
+}
+animateGlow();
+
+// ══════════════════════════════════════════════════════════════════════
+//  3D CARD TILT + LIGHT REFLECTION
+// ══════════════════════════════════════════════════════════════════════
+document.querySelectorAll('[data-tilt]').forEach(card=>{
+  const shine = card.querySelector('.card-shine');
+  card.addEventListener('mousemove', e=>{
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const cx = r.width/2, cy = r.height/2;
+    const rotX = ((y-cy)/cy)*-10;
+    const rotY = ((x-cx)/cx)*10;
+    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`;
+    card.style.boxShadow = `0 0 40px rgba(255,71,196,0.25), 0 20px 40px rgba(0,0,0,0.5)`;
+    card.style.borderColor = 'rgba(255,71,196,0.4)';
+    if(shine){
+      const px = (x/r.width)*100;
+      const py = (y/r.height)*100;
+      shine.style.background = `radial-gradient(circle at ${px}% ${py}%, rgba(255,255,255,0.14) 0%, transparent 55%)`;
+    }
+  });
+  card.addEventListener('mouseleave', ()=>{
+    card.style.transform='';
+    card.style.boxShadow='';
+    card.style.borderColor='';
+    if(shine) shine.style.background='';
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════
+//  SCROLL REVEAL
+// ══════════════════════════════════════════════════════════════════════
+const revealObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
+},{ threshold:0.1 });
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+// ══════════════════════════════════════════════════════════════════════
+//  COUNTER ANIMATION on stats
+// ══════════════════════════════════════════════════════════════════════
+const statEls = document.querySelectorAll('[data-count-text]');
+const countObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    const el = e.target;
+    const final = el.dataset.countText;
+    countObs.unobserve(el);
+    // If it's a word (Free/Private/Safe), do a letter scramble reveal
+    const isWord = isNaN(final.replace('/',''));
+    if(isWord){
+      const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let iter=0;
+      const interval=setInterval(()=>{
+        el.textContent=final.split('').map((c,i)=>{
+          if(i<Math.floor(iter)) return c;
+          return chars[Math.floor(Math.random()*26)];
+        }).join('');
+        iter+=0.6;
+        if(iter>=final.length){ el.textContent=final; clearInterval(interval); }
+      },50);
+    } else {
+      // For "24/7" — type it out character by character
+      let i=0;
+      el.textContent='';
+      const interval=setInterval(()=>{
+        el.textContent=final.slice(0,++i);
+        if(i>=final.length) clearInterval(interval);
+      },120);
+    }
+  });
+},{ threshold:0.5 });
+statEls.forEach(el=>countObs.observe(el));
+
+// ══════════════════════════════════════════════════════════════════════
+//  SCROLL PROGRESS BAR
+// ══════════════════════════════════════════════════════════════════════
+const progressBar = document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  progressBar.style.width=pct+'%';
+});
+</script>
+</body>
+</html>

@@ -1,7 +1,72 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
+function useTilt(selector) {
+  useEffect(() => {
+    const cards = document.querySelectorAll(selector);
+    const handlers = [];
+    cards.forEach(card => {
+      const shine = card.querySelector('.card-shine');
+      const onMove = e => {
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        const rx = ((y - r.height / 2) / (r.height / 2)) * -10;
+        const ry = ((x - r.width / 2) / (r.width / 2)) * 10;
+        card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
+        card.style.boxShadow = '0 0 40px rgba(255,71,196,0.25), 0 20px 40px rgba(0,0,0,0.5)';
+        card.style.borderColor = 'rgba(255,71,196,0.45)';
+        if (shine) {
+          shine.style.background = `radial-gradient(circle at ${(x/r.width)*100}% ${(y/r.height)*100}%, rgba(255,255,255,0.13) 0%, transparent 55%)`;
+          shine.style.opacity = '1';
+        }
+      };
+      const onLeave = () => {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+        card.style.borderColor = '';
+        if (shine) { shine.style.opacity = '0'; shine.style.background = ''; }
+      };
+      card.addEventListener('mousemove', onMove);
+      card.addEventListener('mouseleave', onLeave);
+      handlers.push({ card, onMove, onLeave });
+    });
+    return () => handlers.forEach(({ card, onMove, onLeave }) => {
+      card.removeEventListener('mousemove', onMove);
+      card.removeEventListener('mouseleave', onLeave);
+    });
+  }, [selector]);
+}
+
+function useCounters() {
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-count-text]');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        obs.unobserve(entry.target);
+        const el = entry.target;
+        const final = el.dataset.countText;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let iter = 0;
+        const iv = setInterval(() => {
+          el.textContent = final.split('').map((c, i) => {
+            if (i < Math.floor(iter)) return c;
+            return isNaN(c) && c !== '/' ? chars[Math.floor(Math.random() * 26)] : c;
+          }).join('');
+          iter += 0.55;
+          if (iter >= final.length) { el.textContent = final; clearInterval(iv); }
+        }, 45);
+      });
+    }, { threshold: 0.5 });
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
 
 export default function Landing() {
   const navigate = useNavigate();
+  useTilt('.feature-card');
+  useCounters();
 
   return (
     <>
@@ -106,6 +171,7 @@ export default function Landing() {
           </p>
           <div className="features-grid">
             <div className="feature-card fade-up">
+              <div className="card-shine" />
               <div className="feature-card__icon">💬</div>
               <h3 className="feature-card__title">AI Wellness Companion</h3>
               <p className="feature-card__desc">
@@ -114,6 +180,7 @@ export default function Landing() {
               </p>
             </div>
             <div className="feature-card fade-up">
+              <div className="card-shine" />
               <div className="feature-card__icon">📊</div>
               <h3 className="feature-card__title">Mood Tracker</h3>
               <p className="feature-card__desc">
@@ -122,6 +189,7 @@ export default function Landing() {
               </p>
             </div>
             <div className="feature-card fade-up">
+              <div className="card-shine" />
               <div className="feature-card__icon">🌿</div>
               <h3 className="feature-card__title">Wellness Resources</h3>
               <p className="feature-card__desc">
@@ -158,19 +226,19 @@ export default function Landing() {
             </div>
             <div className="why-stats fade-up">
               <div className="why-stat">
-                <div className="why-stat__number">24/7</div>
+                <div className="why-stat__number" data-count-text="24/7">24/7</div>
                 <div className="why-stat__label">Always available</div>
               </div>
               <div className="why-stat">
-                <div className="why-stat__number">Free</div>
+                <div className="why-stat__number" data-count-text="Free">Free</div>
                 <div className="why-stat__label">No cost, ever</div>
               </div>
               <div className="why-stat">
-                <div className="why-stat__number">Private</div>
+                <div className="why-stat__number" data-count-text="Private">Private</div>
                 <div className="why-stat__label">No account needed</div>
               </div>
               <div className="why-stat">
-                <div className="why-stat__number">Safe</div>
+                <div className="why-stat__number" data-count-text="Safe">Safe</div>
                 <div className="why-stat__label">Crisis support built in</div>
               </div>
             </div>
