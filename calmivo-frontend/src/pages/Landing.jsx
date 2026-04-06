@@ -212,7 +212,7 @@ export default function Landing() {
               <div className="founder-card fade-up">
                 <div className="founder-card__photo-wrap">
                   <img
-                    src="/sunil.jpg"
+                    src="/Sunil.jpg"
                     alt="Sunil Gangupamu, founder of Calmivo"
                     className="founder-card__photo"
                   />
