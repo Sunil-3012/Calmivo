@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
 function useTilt(selector) {
@@ -101,7 +101,7 @@ export default function Landing() {
             <li><a href="#features">Features</a></li>
             <li><a href="#why">Why Calmivo</a></li>
             <li><a href="#testimonials">Stories</a></li>
-            <li><a href="/chat" className="navbar__cta">Start Chatting</a></li>
+            <li><Link to="/chat" className="navbar__cta">Start Chatting</Link></li>
           </ul>
         </div>
       </nav>
@@ -208,16 +208,31 @@ export default function Landing() {
             <div className="why-story">
               <p className="section__label fade-up" style={{ textAlign: 'left' }}>The Story</p>
               <h2 className="why__title fade-up">Why I built Calmivo</h2>
+
+              <div className="founder-card fade-up">
+                <div className="founder-card__photo-wrap">
+                  <img
+                    src="/Sunil.jpg"
+                    alt="Sunil Gangupamu, founder of Calmivo"
+                    className="founder-card__photo"
+                  />
+                  <div className="founder-card__glow" />
+                </div>
+                <div className="founder-card__info">
+                  <div className="founder-card__name">Sunil Gangupamu</div>
+                  <div className="founder-card__title">Founder &amp; Software Engineer</div>
+                </div>
+              </div>
+
               <p className="why__text fade-up">
                 Late one night during my final year of college, I found myself spiraling with anxiety
                 but too exhausted to call anyone. I just needed something to talk to. Something patient.
                 Something that wouldn't judge me for feeling overwhelmed at 2am.
               </p>
               <p className="why__text fade-up">
-                I'm Sunil, a software engineer who started building Calmivo not because I saw a market
-                opportunity, but because I genuinely needed something like it. I combined everything I'd
-                learned about AI, mental wellness frameworks, and thoughtful design to build the companion
-                I wish I'd had.
+                I built Calmivo not because I saw a market opportunity, but because I genuinely needed
+                something like it. I combined everything I'd learned about AI, mental wellness frameworks,
+                and thoughtful design to build the companion I wish I'd had.
               </p>
               <p className="why__text fade-up">
                 Calmivo isn't trying to replace therapy. It's the bridge between feeling overwhelmed
@@ -368,9 +383,9 @@ export default function Landing() {
             <div className="footer__links">
               <h4>Product</h4>
               <ul>
-                <li><a href="/chat">Chat with Sage</a></li>
-                <li><a href="/mood">Mood Tracker</a></li>
-                <li><a href="/resources">Resources</a></li>
+                <li><Link to="/chat">Chat with Sage</Link></li>
+                <li><Link to="/mood">Mood Tracker</Link></li>
+                <li><Link to="/resources">Resources</Link></li>
               </ul>
             </div>
             <div className="footer__links">
