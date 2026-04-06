@@ -1417,6 +1417,68 @@ button { cursor: pointer; font-family: inherit; }
   font-weight: 500;
 }
 
+/* ── FOUNDER CARD ───────────────────────────────── */
+.founder-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: rgba(28, 21, 48, 0.6);
+  border: 1px solid rgba(255, 71, 196, 0.18);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.founder-card:hover {
+  border-color: rgba(255, 71, 196, 0.4);
+  box-shadow: 0 0 24px rgba(255, 71, 196, 0.08);
+}
+.founder-card__photo-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.founder-card__photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  border: 2.5px solid transparent;
+  background: linear-gradient(#0F0B1A, #0F0B1A) padding-box,
+              linear-gradient(135deg, #FF47C4, #C026D3) border-box;
+  display: block;
+}
+.founder-card__glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,71,196,0.25) 0%, transparent 70%);
+  pointer-events: none;
+  animation: founder-glow 3s ease-in-out infinite;
+}
+@keyframes founder-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1);    }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+.founder-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.founder-card__name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text-heading);
+  letter-spacing: 0.01em;
+}
+.founder-card__title {
+  font-size: 0.8rem;
+  color: var(--color-accent);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
 /* ── VOICE CHAT ─────────────────────────────────── */
 .voice-btn {
   width: 44px;
